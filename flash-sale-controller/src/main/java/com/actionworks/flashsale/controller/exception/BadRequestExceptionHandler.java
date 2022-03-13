@@ -1,7 +1,7 @@
 package com.actionworks.flashsale.controller.exception;
 
-import com.actionworks.flashsale.domain.exception.DomainException;
 import com.actionworks.flashsale.app.exception.BizException;
+import com.actionworks.flashsale.domain.exception.DomainException;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
@@ -17,10 +17,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.lang.reflect.UndeclaredThrowableException;
 
-import static com.actionworks.flashsale.controller.constants.ExceptionCode.AUTH_ERROR;
-import static com.actionworks.flashsale.controller.constants.ExceptionCode.BIZ_ERROR;
-import static com.actionworks.flashsale.controller.constants.ExceptionCode.LIMIT_BLOCK;
+import static com.actionworks.flashsale.controller.constants.ExceptionCode.*;
 
+/**
+ * todo: 使用 @ControllerAdvice 和 @ExceptionHandler 可以做到全局异常，但是无法做到统一异常，例如 post 请求的方法，前端使用成了 get，
+ * 这类异常框架层面直接处理了，导致我们无法做统一的异常格式返回。
+ * <p>
+ * ResponseEntityExceptionHandler 类搭配 @ControllerAdvice 使用可以让我们定义统一的异常格式，
+ *  包括之前框架处理的异常，我们可以改为自己进行处理。
+ */
 @ControllerAdvice
 public class BadRequestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(InternalExceptionHandler.class);

@@ -29,6 +29,7 @@ public class SecurityRulesInterceptor implements HandlerInterceptor {
                 .collect(Collectors.toList());
     }
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         for (SecurityRuleChainService securityRuleChainService : getSecurityRuleChainServices()) {
             if (!securityRuleChainService.run(request, response)) {
