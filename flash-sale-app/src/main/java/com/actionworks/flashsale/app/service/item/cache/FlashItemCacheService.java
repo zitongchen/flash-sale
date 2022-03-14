@@ -87,6 +87,11 @@ public class FlashItemCacheService {
             FlashItem flashItem = flashItemDomainService.getFlashItem(itemId);
             FlashItemCache flashItemCache;
             if (flashItem == null) {
+                /*
+                todo: 就算是不存在的数据也需要放入到缓存中，避免缓存穿透。
+                缓存穿透：缓存穿透是指查询的数据在数据库不存在，那么在缓存中也一定不存在。在查询缓存的时候进而去查询数据库，
+                    这样的请求一多，数据库的压力会急剧增加。
+                 */
                 flashItemCache = new FlashItemCache().notExist();
             } else {
                 flashItemCache = new FlashItemCache().with(flashItem).withVersion(System.currentTimeMillis());
