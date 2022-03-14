@@ -1,12 +1,12 @@
 package com.actionworks.flashsale.controller.resource;
 
-import com.actionworks.flashsale.app.service.activity.FlashActivityAppService;
 import com.actionworks.flashsale.app.model.command.FlashActivityPublishCommand;
 import com.actionworks.flashsale.app.model.dto.FlashActivityDTO;
 import com.actionworks.flashsale.app.model.query.FlashActivitiesQuery;
 import com.actionworks.flashsale.app.model.result.AppMultiResult;
 import com.actionworks.flashsale.app.model.result.AppResult;
 import com.actionworks.flashsale.app.model.result.AppSimpleResult;
+import com.actionworks.flashsale.app.service.activity.FlashActivityAppService;
 import com.actionworks.flashsale.controller.model.builder.FlashActivityBuilder;
 import com.actionworks.flashsale.controller.model.builder.ResponseBuilder;
 import com.actionworks.flashsale.controller.model.request.FlashActivityPublishRequest;
@@ -16,14 +16,7 @@ import com.alibaba.cola.dto.MultiResponse;
 import com.alibaba.cola.dto.Response;
 import com.alibaba.cola.dto.SingleResponse;
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -50,6 +43,16 @@ public class FlashActivityController {
         return ResponseBuilder.with(appResult);
     }
 
+    /**
+     * todo: 注解：@RequestAttribute 是获取系统内容设置到 HttpServletRequest 的值，例如会在鉴权拦截器中将 token 转换为 userId，然后将 userId 设置到 RequestAttribute 中。
+     * todo: 注解：@RequestParam 是获取前端传入的值，get 请求 ?pageSize=xx 和 post 请求 form 表单中的值
+     *
+     * @param userId
+     * @param pageSize
+     * @param pageNumber
+     * @param keyword
+     * @return
+     */
     @GetMapping(value = "/flash-activities")
     @SentinelResource("GetActivitiesResource")
     public MultiResponse<FlashActivityResponse> getFlashActivities(@RequestAttribute Long userId,

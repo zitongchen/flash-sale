@@ -23,6 +23,9 @@ public class FlashItemWarmUpScheduler {
     @Resource
     private FlashItemDomainService flashItemDomainService;
 
+    /**
+     * todo: 秒杀品预热，利用了 Spring 自带的定时任务
+     */
     @Scheduled(cron = "*/5 * * * * ?")
     @BetaTrace
     public void warmUpFlashItemTask() {

@@ -33,9 +33,7 @@ import java.util.stream.Collectors;
 
 import static com.actionworks.flashsale.app.auth.model.ResourceEnum.FLASH_ITEM_CREATE;
 import static com.actionworks.flashsale.app.auth.model.ResourceEnum.FLASH_ITEM_OFFLINE;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.ACTIVITY_NOT_FOUND;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.INVALID_PARAMS;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.ITEM_NOT_FOUND;
+import static com.actionworks.flashsale.app.exception.AppErrorCode.*;
 import static com.actionworks.flashsale.app.model.builder.FlashItemAppBuilder.toDomain;
 import static com.actionworks.flashsale.app.model.builder.FlashItemAppBuilder.toFlashItemsQuery;
 import static com.actionworks.flashsale.controller.exception.ErrorCode.UNAUTHORIZED_ACCESS;
@@ -143,7 +141,7 @@ public class DefaultFlashItemAppService implements FlashItemAppService {
         logger.info("itemGet|读取秒杀品|{},{},{}", userId, activityId, itemId, version);
         FlashItemCache flashItemCache = flashItemCacheService.getCachedItem(itemId, version);
         if (!flashItemCache.isExist()) {
-            throw new BizException(ITEM_NOT_FOUND.getErrDesc());
+            throw new BizException(ITEM_NOT_FOUND);
         }
         if (flashItemCache.isLater()) {
             return AppSimpleResult.tryLater();
@@ -158,7 +156,7 @@ public class DefaultFlashItemAppService implements FlashItemAppService {
     public AppSimpleResult<FlashItemDTO> getFlashItem(Long itemId) {
         FlashItemCache flashItemCache = flashItemCacheService.getCachedItem(itemId, null);
         if (!flashItemCache.isExist()) {
-            throw new BizException(ACTIVITY_NOT_FOUND.getErrDesc());
+            throw new BizException(ACTIVITY_NOT_FOUND);
         }
         if (flashItemCache.isLater()) {
             return AppSimpleResult.tryLater();

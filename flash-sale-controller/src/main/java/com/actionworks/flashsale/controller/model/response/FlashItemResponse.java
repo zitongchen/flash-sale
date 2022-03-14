@@ -61,6 +61,7 @@ public class FlashItemResponse {
     private Long version;
 
     /**
+     * todo: 将当前的服务器的时间返回，为客户端进行时间校准。讲究一点的组织会有一个统一的接口返回时间，让客户端进行校准。
      * 当前服务器时间
      */
     private long serverTimeMills = System.currentTimeMillis();
