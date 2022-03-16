@@ -5,11 +5,7 @@ import com.actionworks.flashsale.app.model.builder.FlashOrderAppBuilder;
 import com.actionworks.flashsale.app.model.command.FlashPlaceOrderCommand;
 import com.actionworks.flashsale.app.model.dto.FlashOrderDTO;
 import com.actionworks.flashsale.app.model.query.FlashOrdersQuery;
-import com.actionworks.flashsale.app.model.result.AppMultiResult;
-import com.actionworks.flashsale.app.model.result.AppResult;
-import com.actionworks.flashsale.app.model.result.AppSimpleResult;
-import com.actionworks.flashsale.app.model.result.OrderTaskHandleResult;
-import com.actionworks.flashsale.app.model.result.PlaceOrderResult;
+import com.actionworks.flashsale.app.model.result.*;
 import com.actionworks.flashsale.app.security.SecurityService;
 import com.actionworks.flashsale.app.service.placeorder.PlaceOrderService;
 import com.actionworks.flashsale.app.service.placeorder.queued.QueuedPlaceOrderService;
@@ -33,12 +29,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.actionworks.flashsale.app.exception.AppErrorCode.FREQUENTLY_ERROR;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.INVALID_PARAMS;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.ORDER_CANCEL_FAILED;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.ORDER_NOT_FOUND;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.ORDER_TYPE_NOT_SUPPORT;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.PLACE_ORDER_FAILED;
+import static com.actionworks.flashsale.app.exception.AppErrorCode.*;
 import static com.actionworks.flashsale.app.model.builder.FlashOrderAppBuilder.toFlashOrdersQuery;
 import static com.actionworks.flashsale.util.StringUtil.link;
 
@@ -79,6 +70,7 @@ public class DefaultFlashOrderAppService implements FlashOrderAppService {
                 logger.info("placeOrder|综合风控检验未通过|{}", userId);
                 return AppSimpleResult.failed(PLACE_ORDER_FAILED);
             }
+            // todo: 这里下单失败抛出异常，但是在 catch 中捕获了，那么数据库的库存会回滚吗？
             PlaceOrderResult placeOrderResult = placeOrderService.doPlaceOrder(userId, placeOrderCommand);
             if (!placeOrderResult.isSuccess()) {
                 return AppSimpleResult.failed(placeOrderResult.getCode(), placeOrderResult.getMessage());

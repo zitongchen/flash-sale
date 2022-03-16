@@ -25,9 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
-import static com.actionworks.flashsale.app.exception.AppErrorCode.INVALID_PARAMS;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.ITEM_NOT_FOUND;
-import static com.actionworks.flashsale.app.exception.AppErrorCode.PLACE_ORDER_FAILED;
+import static com.actionworks.flashsale.app.exception.AppErrorCode.*;
 import static com.actionworks.flashsale.app.model.builder.FlashOrderAppBuilder.toDomain;
 
 @Service
@@ -103,12 +101,14 @@ public class NormalPlaceOrderService implements PlaceOrderService {
                 throw new BizException(PLACE_ORDER_FAILED.getErrDesc());
             }
         } catch (Exception e) {
+            // todo: 预扣库存的回滚
             if (preDecreaseStockSuccess) {
                 boolean recoverStockSuccess = itemStockCacheService.increaseItemStock(stockDeduction);
                 if (!recoverStockSuccess) {
                     logger.error("placeOrder|预扣库存恢复失败|{},{}", userId, JSON.toJSONString(placeOrderCommand), e);
                 }
             }
+            // todo: 数据库库存的回滚（通过抛出异常的方式）
             logger.error("placeOrder|下单失败|{},{}", userId, JSON.toJSONString(placeOrderCommand), e);
             throw new BizException(PLACE_ORDER_FAILED.getErrDesc());
         }

@@ -3,6 +3,9 @@ package com.actionworks.flashsale.cache;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * todo: 分布式缓存的接口，便于与具体的分布式缓存实现解耦
+ */
 public interface DistributedCacheService {
     void put(String key, String value);
 
