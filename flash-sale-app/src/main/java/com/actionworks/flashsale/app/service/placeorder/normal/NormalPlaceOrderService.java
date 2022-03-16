@@ -91,6 +91,7 @@ public class NormalPlaceOrderService implements PlaceOrderService {
                 logger.info("placeOrder|库存预扣减失败|{},{}", userId, JSON.toJSONString(placeOrderCommand));
                 return PlaceOrderResult.failed(PLACE_ORDER_FAILED.getErrCode(), PLACE_ORDER_FAILED.getErrDesc());
             }
+            // todo: 这里的数据库扣减是否会有重复扣减的问题呢？
             boolean decreaseStockSuccess = stockDeductionDomainService.decreaseItemStock(stockDeduction);
             if (!decreaseStockSuccess) {
                 logger.info("placeOrder|库存扣减失败|{},{}", userId, JSON.toJSONString(placeOrderCommand));

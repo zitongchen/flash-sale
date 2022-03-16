@@ -148,6 +148,7 @@ public class NormalStockCacheService implements ItemStockCacheService {
             DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>(DECREASE_ITEM_STOCK_LUA, Long.class);
             Long result = null;
             long startTime = System.currentTimeMillis();
+            // 循环重试预扣减库存
             while ((result == null || result == IN_STOCK_ALIGNING) && (System.currentTimeMillis() - startTime) < 1500) {
                 result = redisCacheService.getRedisTemplate().execute(redisScript, keys, stockDeduction.getQuantity());
                 if (result == null) {
