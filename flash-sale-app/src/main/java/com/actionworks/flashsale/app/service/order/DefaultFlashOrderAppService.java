@@ -67,9 +67,11 @@ public class DefaultFlashOrderAppService implements FlashOrderAppService {
         if (userId == null || placeOrderCommand == null || !placeOrderCommand.validateParams()) {
             throw new BizException(INVALID_PARAMS);
         }
+        // todo: 用户下单时获取锁，避免重要重复下单。那么有什么其他的途径可以避免用户重复下单的呢？
         String placeOrderLockKey = getPlaceOrderLockKey(userId);
         DistributedLock placeOrderLock = lockFactoryService.getDistributedLock(placeOrderLockKey);
         try {
+            // 获取不到锁表示操作频繁
             boolean isLockSuccess = placeOrderLock.tryLock(5, 5, TimeUnit.SECONDS);
             if (!isLockSuccess) {
                 return AppSimpleResult.failed(FREQUENTLY_ERROR.getErrCode(), FREQUENTLY_ERROR.getErrDesc());
